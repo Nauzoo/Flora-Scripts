@@ -19,6 +19,7 @@ Lexer* newLexer(char* source, size_t sourceSize);
 
 Token getNextToken(Lexer* lexer);
 void advancePosition(Lexer* lexer);
+void recedePosition(Lexer* Lexer);
 Token evaluateTerm(Lexer* Lexer);
 Token evaluateSymbol(Lexer* lexer, char symbol);
 char peekSource(Lexer* lexer, int offset);

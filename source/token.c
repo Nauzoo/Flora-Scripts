@@ -1,7 +1,7 @@
 #include "token.h"
 #include <stdio.h>
 
-Token newToken(char* tokenValue, enum tokenTypes tokenType){
+Token newToken(char* tokenValue, tokenType tokenType){
     Token tokenObj = {tokenValue, tokenType};
     return tokenObj;
 }

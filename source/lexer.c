@@ -28,65 +28,61 @@ void advancePosition(Lexer* lexer) {
 
 }
 
+void recedePosition(Lexer* lexer) {
+    if (lexer->position > 0) {
+        lexer->position--;
+    }
+}
+
 char peekSource(Lexer* lexer,int offset){
     if (lexer->position + offset < lexer->sourceSize)
         return lexer->source[lexer->position + offset];
     return '\0';
 }
 
+tokenType getTypeFromTable(char* value) {
+    if (value == NULL)
+        return TOKEN_UNKNOWN; // throw error
+    else if (strcmp(value, "struct") == 0)
+        return TOKEN_STRUCT_KW;
+    else if (strcmp(value, "fn") == 0)
+        return TOKEN_FUNCTION_KW;
+    else if (strcmp(value, "self") == 0) 
+        return TOKEN_SELF_REF_KW;
+    else if (strcmp(value, "if") == 0)
+        return TOKEN_IF_KW;
+    else if (strcmp(value, "elsif") == 0)
+        return TOKEN_ELSIF_KW;
+    else if (strcmp(value, "else") == 0)
+        return TOKEN_ELSE_KW;
+    else if (strcmp(value, "return") == 0)
+        return TOKEN_RETURN_KW;
+    
+    return TOKEN_IDENTIFIER;
+
+}
 Token evaluateTerm(Lexer* lexer){
 
     int indexer = 0;
     char* buff = malloc(sizeof(char));
+
     do {
         buff[indexer] = lexer->source[lexer->position];
         indexer++;
         buff = (char*) realloc(buff, sizeof(char)*indexer);
         advancePosition(lexer);
-
+        
     } while (iswalnum(lexer->source[lexer->position]) || lexer->source[lexer->position] == '_');
-    lexer->position--;
+    recedePosition(lexer);
+    buff[indexer] = '\0';
+
     // THIS IS BALLS. Implemet a hashtable NOW!!
-    if (strcmp(buff, "set") == 0){
-        free(buff);
-        return newToken("set", TOKEN_SET_KW);
-    }
-    else if (strcmp(buff, "struct") == 0) {
-        free(buff);
-        return newToken("struct", TOKEN_STRUCT_KW);
-    }
-    else if (strcmp(buff, "numeric") == 0) {
-        free(buff);
-        return newToken("numeric", TOKEN_NUMERIC_KW);
-    }
-    else if (strcmp(buff, "fn") == 0){
-        free(buff);
-        return newToken("fn", TOKEN_FUNCTION_KW);
-    }
-    else if (strcmp(buff, "self") == 0) {
-        free(buff);
-        return newToken("self", TOKEN_SELF_REF_KW);
-    }
-    else if (strcmp(buff, "if") == 0) {
-        free(buff);
-        return newToken("if", TOKEN_IF_KW);
-    }
-    else if (strcmp(buff, "elsif") == 0) {
-        free(buff);
-        return newToken("elsif", TOKEN_ELSIF_KW);
-    }
-    else if (strcmp(buff, "else") == 0) {
-        free(buff);
-        return newToken("else", TOKEN_ELSE_KW);
-    }
-    else if (strcmp(buff, "return") == 0) {
-        free(buff);
-        return newToken("return", TOKEN_RETURN_KW);
-    }
-    else{
-        free(buff);
-        return newToken(buff, TOKEN_IDENTIFIER);
-    } 
+    
+    tokenType tkType = getTypeFromTable(buff);
+    Token tk = newToken(buff, tkType);
+    free(buff);
+
+    return tk;
 
 }
 Token evaluateSymbol(Lexer* lexer, char symbol){

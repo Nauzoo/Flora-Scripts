@@ -1,7 +1,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-enum tokenTypes{
+typedef enum tokenType{
     TOKEN_KEY_WORD,
     TOKEN_PLUS_OP,
     TOKEN_MINUS_OP,
@@ -41,11 +41,11 @@ enum tokenTypes{
     TOKEN_IDENTIFIER,
     TOKEN_EOF,
     TOKEN_UNKNOWN
-};
+} tokenType;
 
 typedef struct {
     char* tk_value;
-    enum tokenTypes tk_type;
+    enum tokenType tk_type;
 } Token;
 typedef struct
 {
@@ -54,7 +54,7 @@ typedef struct
 } TokenList;
 
 
-Token newToken(char* tokenValue, enum tokenTypes tokenType);
+Token newToken(char* tokenValue, enum tokenType tokenType);
 void printToken(Token token);
 
 #endif
